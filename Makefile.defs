@@ -42,7 +42,7 @@ TARGET = crish
 ###
 ### Compiler and linker flags
 ###
-CFLAGS += -O2 -Wall -DLINUX
+CFLAGS += -g -O0 -Wall -DLINUX
 LDFLAGS += -lm -lpthread
 YACC_FLAGS += -DYYERROR_VERBOSE
 
