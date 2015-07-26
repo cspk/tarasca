@@ -173,7 +173,7 @@ void trs_print_row(PrintTable table, ...) {
                 sprintf(row, "%s ", s);
                 for (j = strlen(row); j < LOG_BUFF; j++) {
                     if (j < ptable.size[i])
-                        sprintf(row, "%s ", row);
+                        strcat(row, " ");
                     if (row[j] == '\0' && j >= ptable.size[i])
                         break;
                 }
@@ -622,7 +622,6 @@ void trs_print_cmd_list(SList mode) {
     aux = list_head;
     while (aux) {
         node1 = aux->data;
-        printf("%s:%s\r\n", node1->name, node1->desc);
         trs_print_row(ptable, node1->name, node1->desc);
         aux = aux->next;
     }
