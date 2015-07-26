@@ -708,7 +708,8 @@ int cmdedit_read_input(char command[BUFSIZ])
 	cmdedit_init();
 	/* Print out the command prompt */
     if ((prompt = get_prompt(prompt)) == NULL)
-        goto prepare_to_die; 
+        goto prepare_to_die;
+    printf("parse_prompt=%s\r\n", prompt);
 	parse_prompt(prompt);
 
 	while (1) {
