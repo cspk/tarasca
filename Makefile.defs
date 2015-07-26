@@ -27,7 +27,7 @@
 ###
 ### Programs
 ###
-MAKE = gmake
+MAKE = make
 CC = gcc
 LEX = flex
 YACC = yacc

@@ -25,6 +25,11 @@
 
 include Makefile.defs
 
+generate_graph:
+	@$(MAKE) -C $(UTILS_DIR) all
+	@$(MAKE) -C $(CMDS_DIR) all
+	@$(MAKE) -C $(CLI_DIR) all
+	@$(MAKE) -C $(RHAL_DIR) $@
 
 all:
 	@rm -f $(CLI_DIR)/$(TARGET)

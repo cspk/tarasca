@@ -38,9 +38,9 @@
 #include "misc.h"
 #include "graph.h"
 
-#include "/home/paguilar/projects/tarasca/tarasca-0.3.2/commands/config_mode.h"
-#include "/home/paguilar/projects/tarasca/tarasca-0.3.2/commands/privileged_mode.h"
-#include "/home/paguilar/projects/tarasca/tarasca-0.3.2/commands/user_mode.h"
+#include "/home/arkady/Downloads/tarasca-0.3.2/commands/config_mode.h"
+#include "/home/arkady/Downloads/tarasca-0.3.2/commands/privileged_mode.h"
+#include "/home/arkady/Downloads/tarasca-0.3.2/commands/user_mode.h"
 
 /*****************************
  * DATA TYPES
