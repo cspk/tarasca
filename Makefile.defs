@@ -28,7 +28,7 @@
 ### Programs
 ###
 MAKE = make
-CC = gcc
+CC = arm-linux-gnueabi-gcc
 LEX = flex
 YACC = yacc
 
@@ -42,7 +42,7 @@ TARGET = crish
 ###
 ### Compiler and linker flags
 ###
-CFLAGS += -g -O0 -Wall -DLINUX
+CFLAGS += -O2 -Wall -DLINUX
 LDFLAGS += -lm -lpthread
 YACC_FLAGS += -DYYERROR_VERBOSE
 
@@ -54,7 +54,7 @@ CLI_DIR = cli
 GUI_DIR = gui
 RHAL_DIR = rhal
 UTILS_DIR = utils
-CMDS_DIR = /home/paguilar/projects/tarasca/tarasca-0.3.2/commands
+CMDS_DIR = /home/arkady/Downloads/tarasca-0.3.2/commands
 
 
 ###

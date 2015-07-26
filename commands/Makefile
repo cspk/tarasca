@@ -23,9 +23,9 @@
 #
 
 ROOT_DIR = ../
-include /home/paguilar/projects/tarasca/tarasca-0.3.2/Makefile.defs
+include /home/arkady/Downloads/tarasca-0.3.2/Makefile.defs
 
-CONFIG_FLAGS += -I"/home/paguilar/projects/tarasca/tarasca-0.3.2/rhal" -I"/home/paguilar/projects/tarasca/tarasca-0.3.2/cli" -I"/home/paguilar/projects/tarasca/tarasca-0.3.2/utils"
+CONFIG_FLAGS += -I"/home/arkady/Downloads/tarasca-0.3.2/rhal" -I"/home/arkady/Downloads/tarasca-0.3.2/cli" -I"/home/arkady/Downloads/tarasca-0.3.2/utils"
 
 CMDS_SRCS += $(wildcard *.c)
 CMDS_OBJS += $(patsubst %.c, %.o, $(CMDS_SRCS))

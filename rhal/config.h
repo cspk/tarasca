@@ -29,7 +29,7 @@
  *****************************/
 
 #define TARASCA_CONF_PATH	"etc"
-#define TARASCA_CMD_PATH	"/home/paguilar/projects/tarasca/tarasca-0.3.2/commands"
+#define TARASCA_CMD_PATH	"/home/arkady/Downloads/tarasca-0.3.2/commands"
 #define TARASCA_LOG_DIR		"log"
 
 
