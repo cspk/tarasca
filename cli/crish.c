@@ -190,8 +190,11 @@ char * get_prompt(char *prompt) {
                 prompt_len;
 
     mode = matrix->mode->data;
+	printf("%d\r\n", __LINE__);
     if (!mode) {
+    	printf("%d\r\n", __LINE__);
         if ((prompt = (char *)xmalloc(sizeof(char), 4)) == NULL) {
+        	printf("%d\r\n", __LINE__);
             return NULL;
         }
         reset_buff(prompt, 4);
@@ -200,8 +203,11 @@ char * get_prompt(char *prompt) {
     }
 
     raw_prompt = mode->prompt;
+	printf("%d\r\n", __LINE__);
     if (!raw_prompt) {
+    	printf("%d\r\n", __LINE__);
         if ((prompt = (char *)xmalloc(sizeof(char), 4)) == NULL) {
+        	printf("%d\r\n", __LINE__);
             return NULL;
         }
         reset_buff(prompt, 4);
@@ -210,24 +216,31 @@ char * get_prompt(char *prompt) {
     }
 
     if ((prompt = (char *)xmalloc(sizeof(char), strlen(raw_prompt) + 33)) == NULL) {
+    	printf("%d\r\n", __LINE__);
         return NULL;
     }
 
+	printf("%d\r\n", __LINE__);
     reset_buff(prompt, strlen(raw_prompt) + 33);
     reset_buff(hostname, 32);
     prompt_len = strlen(raw_prompt);
     while (i < prompt_len) {
+    	printf("%d\r\n", __LINE__);
         if ((*raw_prompt == '%') && (*(raw_prompt + 1) == 'h') && (i < prompt_len - 1)) {
+        	printf("%d\r\n", __LINE__);
             gethostname(hostname, 32);
             sprintf(prompt, "%s%s", prompt, hostname);
             raw_prompt++;
         }
         else {
+        	printf("%d\r\n", __LINE__);
             sprintf(prompt, "%s%c", prompt, *raw_prompt);
         }
+    	printf("%d\r\n", __LINE__);
         raw_prompt++; i++;
     }
     sprintf(prompt, "%s ", prompt);
+	printf("%d\r\n", __LINE__);
     return prompt;
 }
 
