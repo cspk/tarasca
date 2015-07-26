@@ -229,8 +229,7 @@ char * get_prompt(char *prompt) {
         raw_prompt++; i++;
         prompt_tmp += strlen(prompt_tmp);
     }
-    sprintf(prompt, "%s ", prompt);
-    printf("protmp1=%s\r\n", prompt);
+    strcat(prompt, " ");
     return prompt;
 }
 
