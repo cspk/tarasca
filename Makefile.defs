@@ -28,7 +28,7 @@
 ### Programs
 ###
 MAKE = make
-CC = gcc
+CC = arm-linux-gnueabi-gcc
 LEX = flex
 YACC = yacc
 
