@@ -230,6 +230,7 @@ char * get_prompt(char *prompt) {
         prompt_tmp += strlen(prompt_tmp);
     }
     sprintf(prompt, "%s ", prompt);
+    printf("protmp1=%s\r\n", prompt);
     return prompt;
 }
 
