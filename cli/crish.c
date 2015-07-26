@@ -216,16 +216,20 @@ char * get_prompt(char *prompt) {
     reset_buff(prompt, strlen(raw_prompt) + 33);
     reset_buff(hostname, 32);
     prompt_len = strlen(raw_prompt);
+    char *prompt_tmp = prompt;
     while (i < prompt_len) {
         if ((*raw_prompt == '%') && (*(raw_prompt + 1) == 'h') && (i < prompt_len - 1)) {
             gethostname(hostname, 32);
-            sprintf(prompt, "%s%s", prompt, hostname);
+            sprintf(prompt_tmp, "%s%s", prompt, hostname);
             raw_prompt++;
+            break;
         }
         else {
-            sprintf(prompt, "%s%c", prompt, *raw_prompt);
+            sprintf(prompt_tmp, "%s%c", prompt, *raw_prompt);
         }
         raw_prompt++; i++;
+        prompt_tmp += strlen(prompt_tmp);
+        printf("protmp=%s\r\n", prompt);
     }
     sprintf(prompt, "%s ", prompt);
     return prompt;
