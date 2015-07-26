@@ -1,0 +1,67 @@
+
+Version 0.3.2
+
+- The modes and all their commands can be declared in any order
+in the *.cli files.
+Previously, all modes needed to be created before the commands 
+Specifically, if a command wanted to be available to a given
+mode, that mode needed to be created explicity first within a 
+mode section.
+- No need for lex/yacc because their generated *.c and *.h 
+files are already provided. This avoids compatibility problems
+with different versions while generating the C files. 
+However, if you want to generate them yourself, enter
+'gmake clean_lex_yacc', 'gmake clean' and 'gmake'
+- The configuration options --confdir, --commandsdir and --logdir
+given in the 'configure' script can now be located in any dir 
+where you have write access. This way the --confdir and --logdir
+can be in different filesystem (for example, cramfs and tmpfs).
+--commandsdir is only used for generating the final exec, it
+isn't used at execution time.
+- Added reserved word 'netmask' to grammar.
+This new token can be checked with the func is_netmask()
+- Improved logging mechanism.
+- Improved debug info of the RHAL.
+- Add the INSTALL file.
+- Fix a serious bug that didn't allow the optional args
+that have a parent arg to appear in the final graph
+- Fix the IP address validation
+- A lot of minor bugs were fixed.
+
+
+Version 0.3.1
+
+- The graph_static_generator is executed correctly when
+compiling.
+- Substitue the '//' comments with '/* */' due that they're
+not ANSI C standard 
+- The 'shell' cmd works as expected if 'bash' is available
+- Add the tarasca.h file. Now the users only need
+to add this file to their *.c and *.h files instead 
+of the several Tarasca *.h files
+- Rename the API functions with the suffix trs_*
+to avoid confusion with user-defined or other
+libraries functions (breaks compatibility with previous 
+versions).
+- Several small bugs were fixed.
+
+
+Version 0.3.0
+
+- configure script created that solves several problems
+with default paths and options.
+- The executable generated 'crish' can be called not only
+from a terminal, but from some other script/shell/program.
+These means that can be used from a GUI. It's still alpha
+- The client/server model dissappears and the map_cmd_func
+utility is changed by the graph_static_generator that is
+executed when compiling. In this way there is no need for having
+the configuration files in the production (target) system.
+- Updated documentation.
+- Several bugs were fixed.
+
+
+Version 0.2
+
+First version
+

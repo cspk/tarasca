@@ -1,0 +1,115 @@
+#
+# Makefile.defs --
+#
+# Author -- Pedro Aguilar <paguilar@junkerhq.net>
+#
+# Copyright (c) 2004 - 2006 Pedro Aguilar
+#
+# Description: General definitions for the whole project
+#
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+#
+
+
+###
+### Programs
+###
+MAKE = gmake
+CC = gcc
+LEX = flex
+YACC = yacc
+
+
+###
+### Targets
+###
+TARGET = crish
+
+
+###
+### Compiler and linker flags
+###
+CFLAGS += -O2 -Wall -DLINUX
+LDFLAGS += -lm -lpthread
+YACC_FLAGS += -DYYERROR_VERBOSE
+
+
+###
+### Directory defines
+###
+CLI_DIR = cli
+GUI_DIR = gui
+RHAL_DIR = rhal
+UTILS_DIR = utils
+CMDS_DIR = /home/paguilar/projects/tarasca/tarasca-0.3.2/commands
+
+
+###
+### Configuration flags (set by user in 'configure')
+###
+ENABLE_AUTH = 0
+ifeq ($(ENABLE_AUTH), 1)
+    CONFIG_FLAGS += -DENABLE_AUTH 
+    ### Encryption
+    CRYPT_FLAGS = -lmhash -lmcrypt
+endif
+
+ENABLE_SHELL_MSG = 1
+ifeq ($(ENABLE_SHELL_MSG), 1)
+    CONFIG_FLAGS += -DENABLE_SHELL_MSG 
+endif
+
+ENABLE_LAST_LOGIN = 0
+ifeq ($(ENABLE_LAST_LOGIN), 1)
+    CONFIG_FLAGS += -DENABLE_LAST_LOGIN 
+endif
+
+ENABLE_END_MSG = 0
+ifeq ($(ENABLE_END_MSG), 1)
+    CONFIG_FLAGS += -DENABLE_END_MSG 
+endif
+
+ENABLE_GUI = 0
+ifeq ($(ENABLE_GUI), 1)
+    CONFIG_FLAGS += -DENABLE_GUI 
+endif
+
+ENABLE_LOGS = 0
+ifeq ($(ENABLE_LOGS), 1)
+    CONFIG_FLAGS += -DENABLE_LOGS 
+endif
+
+
+###
+### Debug (set by user in 'configure')
+###
+DEBUG_PRINTF = 0
+DEBUG_RHAL = 0
+DEBUG_SHELL = 0
+
+ifeq ($(DEBUG_RHAL), 1)
+    DEBUG_FLAGS += -DDEBUG_RHAL
+endif
+
+ifeq ($(DEBUG_PRINTF), 1)
+    DEBUG_FLAGS += -DDEBUG_PRINTF
+endif
+
+ifeq ($(DEBUG_SHELL), 1)
+    DEBUG_FLAGS += -DDEBUG_SHELL
+endif
+
+

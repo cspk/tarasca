@@ -1,0 +1,151 @@
+
+Tarasca Project v0.3.2
+
+
+Configuration and Installation
+------------------------------
+
+
+2.1 Download the project
+
+The project homepage where it can be downloaded is  
+http://sourceforge.net/projects/tarasca
+
+
+
+2.2 System requirements
+
+The requirements for configuring and compiling the system in the host machine 
+are the following (they are normally installed by default in most Linux 
+distributions):
+
+- Perl
+
+Lex (Flex) and Yacc (Bison) could be needed if the files lex.yy.c, y.tab.c 
+and y.tab.h are removed.
+These files are already present in the default package.
+
+
+
+2.3 Quick configuration and installation
+
+$ tar xvfz tarasca-0.3.0.tgz
+$ cd  tarasca-0.3.0
+
+$ ./configure [OPTION]... [VAR=VALUE]...
+$ gmake
+
+The executable, called crish, is inside the subdirectory /cli of the project.
+
+$ cli/crish
+
+IMPORTANT: If the system was configured with the --enable-auth option, 
+the default password is admin123
+
+
+
+2.4 Detailed configuration and compilation
+
+The first step is to decompress the source code and change to the newly 
+created directory:
+
+$ tar xvfz tarasca-0.3.0.tgz
+$ cd  tarasca-0.3.0
+
+
+2.4.1 Configuration
+
+The configure script is used for setting the important variables and options.
+This script is not like the ‘normal’ configure provided by autotools. 
+This is because the autotools are not very friendly when cross-compiling, 
+therefore the configure provided is a simple Perl script.
+
+The available variables and options are displayed typing
+
+$ ./configure --help
+
+  -h, --help            Display this help and exit
+
+Installation directories:
+  --prefix=PREFIX       Install architecture-independent files in PREFIX
+                        [/usr/local/tarasca]
+  --confdir=DIR         Configuration data [PREFIX/etc]
+  --commandsdir=DIR     User-defined commands [PREFIX/commands]
+  --logsdir=DIR         Logs data [PREFIX/log]
+
+Compiler, parser and scanner:
+  --cc=COMPILER         Use compiler COMPILER [gcc]
+  --lex=LEX             Use lexical parser LEX [flex]
+  --yacc=YACC           Use syntactical scanner YACC [bison]
+
+Optional Features:
+  --enable-auth         Ask for a login/passwd at prompt [no]
+  --disable-shell-msg   Display a welcome msg [yes]
+  --enable-last-login   Display last login msg [no]
+  --enable-end-msg      Display a good-bye msg [no]
+  --enable-gui          Can be called from another program/script/shell [no]
+  --enable-logs         Write logs to a file [no]
+  --enable-debug        Output generic debug info [no]
+  --enable-debug-rhal   Output debug info for the RHAL [no]
+  --enable-debug-shell  Output debug info for the shell [no]
+
+
+If the --prefix=PREFIX is different than the default, for example, 
+/usr/local/tarasca, the following directories and their contents must be 
+copied to the new location: commands, etc and log.
+
+If the system was configured with the default options (everything disabled) 
+or the directory paths were absolute, crish can be copied to any directory 
+in the target system and executed.
+
+If the --enable-gui option was enabled, the executable, called crish, 
+can be called from a script/program/shell. This is described in more detail 
+in section 2.4.2.
+
+
+2.4.2 Compilation and execution
+
+Compile the source code
+
+$ gmake
+
+The generated executable, called crish, is inside the subdirectory /cli of the project and can be executed as follows
+
+$ cli/crish
+
+If --enable-auth was set, the default passwords for login and enable 
+are admin123
+They can be changed with the passwd-login and passwd-enable commands, 
+respectively. This commands are provided as part of the default 
+configuration files in the distribution.
+
+If the --enable-gui option was enabled, the executable, called crish, 
+can be called from a script, shell or program like a Perl/PHP script 
+or a C/C++/Java program with a system() call or equivalent. 
+In this way, a GUI can make use of this system without rewriting 
+the same functionality.
+
+For example, after implementing the command my_cmd1 in the Tarasca project, 
+it will be available from the CLI in a terminal when calling just crish 
+
+$ cli/crish
+tarasca> my_cmd1 item1
+Sample output of my_cmd1 with argument item1
+tarasca>
+
+The same commands my_cmd1 will be available at the same time to some 
+other script/program/shell, like a web-based GUI written in  Perl/PHP, 
+when calling crish with the command and arguments as its parameters. 
+The result of the executed command will be sent to stdout, 
+so the script/program/shell needs only to redirect the crish’s stdout 
+to a file/hash/array.
+
+Inside a Perl script:
+
+`cli/crish my_cmd1 item1 > output_file`;
+
+The file output_file will contain “Sample output of my_cmd1 with argument item1”;
+
+Warning: This is still experimental and it has not been tested as necessary.
+
+

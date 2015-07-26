@@ -1,0 +1,56 @@
+#
+# Makefile --
+#
+# Author -- Pedro Aguilar <paguilar@junkerhq.net>
+#
+# Copyright (c) 2004, 2005 Pedro Aguilar
+#
+# Description:  Makefile for the cli directory
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+#
+
+
+ROOT_DIR = ..
+include $(ROOT_DIR)/Makefile.defs
+
+
+SH_SRCS += crish.c cmdedit.c
+SH_OBJS += $(patsubst %.c, %.o, $(SH_SRCS))
+
+
+all : crish 
+
+crish: $(SH_OBJS)
+	@echo Linking $(TARGET)...
+	$(CC) $(CRYPT_FLAGS) $(LDFLAGS) -o $(TARGET) $(SH_OBJS) \
+        $(wildcard $(ROOT_DIR)/$(RHAL_DIR)/*.o) \
+        $(wildcard $(ROOT_DIR)/$(UTILS_DIR)/*.o) \
+        $(wildcard $(CMDS_DIR)/*.o)
+
+crish.o: crish.c
+	@echo CC $^
+	$(CC) $(CFLAGS) $(CONFIG_FLAGS) $(DEBUG_FLAGS) -I../$(RHAL_DIR) \
+		-I../$(UTILS_DIR) -I../$(CMDS_DIR) -c $^
+
+cmdedit.o: cmdedit.c
+	@echo CC $^
+	@$(CC) $(CFLAGS) $(DEBUG_FLAGS) -I../$(RHAL_DIR) -I../$(UTILS_DIR) -c $^
+
+
+clean:
+	@echo Cleaning $(CLI_DIR)
+	@rm -f $(TARGET) $(SH_OBJS) *.o
+

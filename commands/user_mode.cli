@@ -1,0 +1,101 @@
+#
+# user_mode.cli --
+#
+# Author -- Pedro Aguilar <paguilar@junkerhq.net>
+#
+# Copyright (c) 2004 - 2006 Pedro Aguilar
+#
+# Description:	Configuration commands for the user mode.
+#     Since these commands are available to all existing modes
+#     they must be declared at the end, when all modes have
+#     been declared.
+# 
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+#
+
+mode user_mode {
+    prompt = "%h>";
+
+    # Quit the shell
+    command quit {
+	func = user_mode_quit;
+        avail = privileged_mode;
+        avail = iface;
+        avail = system;
+        desc = "Quit the shell";
+    }
+
+    # Exit an access mode
+    command exit {
+	func = user_mode_exit;
+        avail = privileged_mode;
+        avail = iface;
+        avail = system;
+        desc = "Exit the current mode";
+    }
+
+    # Help
+    command help {
+	func = user_mode_help;
+        avail = privileged_mode;
+        avail = iface;
+        avail = system;
+        desc = "Display the syntax of the given command";
+
+        arg cmd {
+            value = string;
+            prio = mandatory;
+            desc = "Name of the command";
+        }
+    }
+
+    # Show
+    command show {
+	func = user_mode_show;
+        avail = privileged_mode;
+        avail = iface;
+        avail = system;
+        desc = "Sample command: Display information about an item";
+
+        arg item {
+            value = string;
+            prio = mandatory;
+            desc = "Sample parameter: Item from which information has to be gathered";
+        }
+
+        arg item_instance {
+            value = number;
+            prio = mandatory;
+            desc = "Sample parameter: Instance of the item";
+        }
+    }
+
+    # '?'
+    command ? {
+	func = user_mode_list_cmds;
+        avail = privileged_mode;
+        avail = iface;
+        avail = system;
+        desc = "Display the list of available commands in the current mode";
+    }
+
+    # Change to privileged mode
+    command enable {
+        func = user_mode_enable;
+        desc = "Enable privileged mode";
+    }
+}
+

@@ -1,0 +1,294 @@
+#!/usr/bin/perl -W
+
+#
+# configure --
+#
+# Author -- Pedro Aguilar <paguilar@junkerhq.net>
+#
+# Copyright (c) 2006 Pedro Aguilar
+#
+# Description: Configures the program. This is the first step for
+#     using this project.
+#
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+#
+
+
+use strict;
+use Tie::File;
+
+format HELP =
+
+Usage: ./configure [OPTION]... [VAR=VALUE]...
+
+Defaults for the options are specified in brackets.
+
+  -h, --help            Display this help and exit
+
+Installation directories:
+  --confdir=DIR		Configuration data [./etc]
+  --commandsdir=DIR	User-defined commands [./commands]
+  --logdir=DIR		Logs data [./log]
+
+Compiler, parser and scanner:
+  --cc=COMPILER		Use compiler COMPILER [gcc]
+  --lex=LEX		Use lexical parser LEX [lex]
+  --yacc=YACC		Use syntactical scanner YACC [yacc]
+
+Optional Features:
+  --enable-auth		Ask for a login/passwd at prompt [no]
+                        Default passwords: admin123
+  --disable-shell-msg	Display a welcome msg [yes]
+  --enable-last-login   Display last login msg [no]
+  --enable-end-msg	Display a good-bye msg [no]
+  --enable-gui		Can be called from another program/script/shell [no]
+  --enable-logs		Write logs to a file [no]
+  --enable-debug 	Output generic debug info [no]
+  --enable-debug-rhal	Output debug info for the RHAL [no]
+  --enable-debug-shell  Output debug info for the shell [no]
+
+.
+
+
+MAIN: {
+
+    my %config;
+
+    # Set defaults
+    $config{'confdir'} = "etc";
+    $config{'commandsdir'} = "commands";
+    $config{'logdir'} = "log";
+    $config{'cc'} = "gcc";
+    $config{'lex'} = "flex";
+    $config{'yacc'} = "yacc";
+    $config{'auth'} = 0;
+    $config{'shell_msg'} = 1;
+    $config{'last_login'} = 0;
+    $config{'end_msg'} = 0;
+    $config{'gui'} = 0;
+    $config{'logs'} = 0;
+    $config{'debug'} = 0;
+    $config{'debug_rhal'} = 0;
+    $config{'debug_shell'} = 0;
+
+    my $os = `uname`;
+    chomp($os);
+    $os =~ s/\s*//;
+
+    #
+    # Get config options and vars from the command line
+    #
+    foreach my $arg (@ARGV) {
+
+        if ($arg =~ /^\-h$/ || $arg =~ /^\-\-help$/) {
+            $~ = 'HELP';
+            write;
+            exit;
+        }
+        # Get vars
+        elsif ($arg =~ /^\-\-confdir\=/) {
+            $config{'confdir'} = $';
+            $config{'confdir'} =~ s/(^\s+)|(\")|(\s+$)//;
+        }
+        elsif ($arg =~ /^\-\-commandsdir\=/) {
+            $config{'commandsdir'} = $';
+            $config{'commandsdir'} =~ s/(^\s+)|(\")|(\s+$)//;
+        }
+        elsif ($arg =~ /^\-\-logdir\=/) {
+            $config{'logdir'} = $';
+            $config{'logdir'} =~ s/(^\s+)|(\")|(\s+$)//;
+        }
+        elsif ($arg =~ /^\-\-cc\=/) {
+            $config{'cc'} = $';
+            $config{'cc'} =~ s/\"//;
+        }
+        elsif ($arg =~ /^\-\-lex\=/) {
+            $config{'lex'} = $';
+            $config{'lex'} =~ s/\"//;
+        }
+        elsif ($arg =~ /^\-\-yacc\=/) {
+            $config{'yacc'} = $';
+            $config{'yacc'} =~ s/\"//;
+        }
+        # Get options
+        elsif ($arg =~ /^\-\-(en|dis)able\-auth$/) {
+            if ($arg =~ /enable/) { $config{'auth'} = 1; }
+            else { $config{'auth'} = 0; }
+        }
+        elsif ($arg =~ /^\-\-(en|dis)able\-shell\-msg$/) {
+            if ($arg =~ /enable/) { $config{'shell_msg'} = 1; }
+            else { $config{'shell_msg'} = 0; }
+        }
+        elsif ($arg =~ /^\-\-(en|dis)able\-last\-login$/) {
+            if ($arg =~ /enable/) { $config{'last_login'} = 1; }
+            else { $config{'last_login'} = 0; }
+        }
+        elsif ($arg =~ /^\-\-(en|dis)able\-end\-msg$/) {
+            if ($arg =~ /enable/) { $config{'end_msg'} = 1; }
+            else { $config{'end_msg'} = 0; }
+        }
+        elsif ($arg =~ /^\-\-(en|dis)able\-gui$/) {
+            if ($arg =~ /enable/) { $config{'gui'} = 1; }
+            else { $config{'gui'} = 0; }
+        }
+        elsif ($arg =~ /^\-\-(en|dis)able\-logs$/) {
+            if ($arg =~ /enable/) { $config{'logs'} = 1; }
+            else { $config{'logs'} = 0; }
+        }
+        elsif ($arg =~ /^\-\-(en|dis)able\-debug$/) {
+            if ($arg =~ /enable/) { $config{'debug'} = 1; }
+            else { $config{'debug'} = 0; }
+        }
+        elsif ($arg =~ /^\-\-(en|dis)able\-debug\-rhal$/) {
+            if ($arg =~ /enable/) { $config{'debug_rhal'} = 1; }
+            else { $config{'debug_rhal'} = 0; }
+        }
+        elsif ($arg =~ /^\-\-(en|dis)able\-debug\-shell$/) {
+            if ($arg =~ /enable/) { $config{'debug_shell'} = 1; }
+            else { $config{'debug_shell'} = 0; }
+        }
+        else {
+            print "Unrecognized argument '$arg'\n";
+    
+            $~ = 'HELP';
+            write;
+            exit;
+        }
+    }
+
+    # Create the top dir if it doesn't exists
+    if ($config{'commandsdir'} =~ /\//) {
+        #$config{'commandsdir'} =~ /.*\//;
+        if (! -e $&) {
+            print "Directory \'$&\' doesn't exists. Creating it...\n";
+            mkdir $& or die "FATAL: Couldn't create '$&'\n";
+        }
+    }
+
+    # Get current path
+    my $pwd = `pwd`;
+    chomp($pwd);
+
+
+    if ($config{'commandsdir'} !~ /^\//) {
+        $config{'commandsdir'} = $pwd."/".$config{'commandsdir'};
+    }
+
+    # Edit the commands/Makefile according to the given values
+    my $src = "commands/Makefile";
+    tie my @line, 'Tie::File', $src or die "FATAL: Couldn't open $src\n";
+
+    for (@line) {
+        s/^(\s*include).*/$1 $pwd\/Makefile\.defs/;
+        s/^(\s*CONFIG_FLAGS).*/$1 \+\= \-I\"$pwd\/rhal\" \-I\"$pwd\/cli\" \-I\"$pwd\/utils\"/;
+    }
+    untie @line;
+
+    # Edit the rhal/config.h according to the given values
+    $src = "rhal/config.h";
+    tie @line, 'Tie::File', $src or die "FATAL: Couldn't open $src\n";
+
+    for (@line) {
+        s/^(\s*\#define\s*TARASCA_CONF_PATH).*/$1\t\"$config{'confdir'}\"\n/;
+        s/^(\s*\#define\s*TARASCA_LOG_DIR).*/$1\t\t\"$config{'logdir'}\"\n/;
+        s/^(\s*\#define\s*TARASCA_CMD_PATH).*/$1\t\"$config{'commandsdir'}\"\n/;
+    }
+
+    untie @line;
+
+    # Edit the Makefile.defs according to the given values
+    $src = "Makefile.defs";
+    tie @line, 'Tie::File', $src or die "FATAL: Couldn't open $src\n";
+
+    for (@line) {
+        s/^(\s*CC\s*\=).*/$1 $config{'cc'}\n/;
+        s/^(\s*LEX\s*\=).*/$1 $config{'lex'}\n/;
+        s/^(\s*YACC\s*\=).*/$1 $config{'yacc'}\n/;
+        s/^(\s*ENABLE_AUTH\s*\=).*/$1 $config{'auth'}\n/;
+        s/^(\s*ENABLE_SHELL_MSG\s*\=).*/$1 $config{'shell_msg'}\n/;
+        s/^(\s*ENABLE_LAST_LOGIN\s*\=).*/$1 $config{'last_login'}\n/;
+        s/^(\s*ENABLE_END_MSG\s*\=).*/$1 $config{'end_msg'}\n/;
+        s/^(\s*ENABLE_GUI\s*\=).*/$1 $config{'gui'}\n/;
+        s/^(\s*ENABLE_LOGS\s*\=).*/$1 $config{'logs'}\n/;
+        s/^(\s*DEBUG_PRINTF\s*\=).*/$1 $config{'debug'}\n/;
+        s/^(\s*DEBUG_RHAL\s*\=).*/$1 $config{'debug_rhal'}\n/;
+        s/^(\s*DEBUG_SHELL\s*\=).*/$1 $config{'debug_shell'}\n/;
+
+        # Set the right 'make' version according to the OS
+        if (/^(\s*MAKE\s*\=).*/) {
+            if ($os eq "Solaris" || $os eq "CYGWIN") {
+                s/^(\s*MAKE).*/$1 \= make\n/;
+            }
+            else {
+                s/^(\s*MAKE).*/$1 \= gmake\n/;
+            }
+        }
+
+        # Set the CFLAGS according to the OS
+        if (/^(\s*CFLAGS).*/) {
+            if ($os eq "Linux") {
+                s/^(\s*CFLAGS).*/$1 \+\= -O2 -Wall -DLINUX\n/;
+            }
+            elsif ($os eq "Solaris") {
+                s/^(\s*CFLAGS).*/$1 \+\= -O2 -Wall -DSOLARIS\n/;
+            }
+            else {
+                s/^(\s*CFLAGS).*/$1 \+\= -O2 -Wall\n/;
+            }
+        }
+
+        # Set the commands dir that can be located in any rw filesystem
+        if (/^(\s*CMDS_DIR\s*\=).*/) {
+            # Create the dir if it doesn't exist
+            if (! -e $config{'commandsdir'}) {
+                print "Directory \'$config{'commandsdir'}\' doesn't exists. Creating it...\n";
+                mkdir $config{'commandsdir'} or 
+                    die "FATAL: Couldn't create $config{'commandsdir'}\n";
+            }
+
+            if ($config{'commandsdir'} ne $pwd."/commands") {
+                $config{'commandsdir'} =~ s/ /\\ /;
+                `install -m 664 commands/* $config{'commandsdir'}`;
+            }
+
+            s/^(\s*CMDS_DIR\s*\=).*/$1 $config{'commandsdir'}\n/;
+        }
+    }
+    untie @line;
+
+
+    # Create and copy files to the etc/ dir
+    if (! -e $config{'confdir'}) {
+        print "Directory \'$config{'confdir'}\' doesn't exists. Creating it...\n";
+        mkdir $config{'confdir'} or 
+            die "FATAL: Couldn't create $config{'confdir'}\n";
+    }
+
+    if ($config{'confdir'} ne "etc") {
+        $config{'confdir'} =~ s/ /\\ /;
+        `install -m 664 etc/* $config{'confdir'}`;
+    }
+
+    # Create the log/ dir
+    if (! -e $config{'logdir'}) {
+        print "Directory \'$config{'logdir'}\' doesn't exists. Creating it...\n";
+        mkdir $config{'logdir'} or 
+            die "FATAL: Couldn't create $config{'logdir'}\n";
+    }
+
+    print "Done!\n";
+}
+

@@ -1,0 +1,94 @@
+#
+# config_mode.cli --
+#
+# Author -- Pedro Aguilar <paguilar@junkerhq.net>
+#
+# Copyright (c) 2004 - 2006 Pedro Aguilar
+#
+# Description:	Sample configuration commands
+# 
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+#
+
+#
+# Declare the 'iface' mode. When entering this mode
+# the prompt will change to 'hostname(iface)# '
+# It has one command called 'ifconfig'
+#
+mode iface {
+    prompt = "%h(iface)#";
+
+    # Declare the command 'ifconfig'
+    # It has one mandatory argument 'inteface' and
+    # two optional arguments 'ip' and 'netmask'.
+    # The argument 'netmask' depends on its parent
+    # argument 'ip', this means it cannot appear
+    # if its parent is not given first in this 
+    # declaration and at execution time
+    command ifconfig {
+	func = iface_mode_ifconfig;
+        desc = "Configure the given network interface";
+
+        # Mandatory argument
+        arg interface {
+            value = string;
+            prio = mandatory;
+            desc = "Interface name";
+        }
+
+        # Optional argument
+        arg ip {
+            name = "ip";
+            value = ipaddr;
+            prio = optional;
+            desc = "IP address";
+        }
+
+        # Optional argument that depends on 'ip'
+        arg netmask {
+            name = "netmask";
+            value = networkmask;
+            prio = optional;
+            parent = ip;
+            desc = "Netmask";
+        }
+    }
+
+}
+
+
+#
+# Declare the 'system' mode. When entering this mode
+# the prompt will change to 'hostname(system)# '
+# It has one command called 'meminfo'
+#
+mode system {
+    prompt = "%h(system)#";
+
+    # Declare the command 'sys-info'
+    # It's a simple command that does not receive any
+    # input but displays a table as an output
+    # This command is available (it can be executed) in
+    # this mode 'system' and in the mode 'iface'
+    command sys-info {
+	func = system_mode_info;
+        avail = iface;
+        desc = "Display system information";
+    }
+}
+
+
+
