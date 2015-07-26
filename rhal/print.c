@@ -622,6 +622,7 @@ void trs_print_cmd_list(SList mode) {
     aux = list_head;
     while (aux) {
         node1 = aux->data;
+        printf("%s:%s\r\n", node1->name, node1->desc);
         trs_print_row(ptable, node1->name, node1->desc);
         aux = aux->next;
     }
