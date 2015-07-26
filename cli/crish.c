@@ -222,14 +222,12 @@ char * get_prompt(char *prompt) {
             gethostname(hostname, 32);
             sprintf(prompt_tmp, "%s%s", prompt, hostname);
             raw_prompt++;
-            break;
         }
         else {
-            sprintf(prompt_tmp, "%s%c", prompt, *raw_prompt);
+            sprintf(prompt_tmp, "%c", *raw_prompt);
         }
         raw_prompt++; i++;
         prompt_tmp += strlen(prompt_tmp);
-        printf("protmp=%s\r\n", prompt);
     }
     sprintf(prompt, "%s ", prompt);
     return prompt;
