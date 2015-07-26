@@ -70,11 +70,10 @@ print.o: print.c
 	@echo CC $^
 	@$(CC) $(CFLAGS) $(CONFIG_FLAGS) $(DEBUG_FLAGS) -I../$(UTILS_DIR) -c $^
 
-HOST_CC = gcc
 generate_graph: graph_static_generator.c
-	@echo HOST_CC $^
-	@$(HOST_CC) $(CFLAGS) $(DEBUG_FLAGS) -I../$(UTILS_DIR) -c $^
-	@$(HOST_CC) -o $(STATIC_GRAPH) $(RHAL_OBJS) \
+	@echo CC $^
+	@$(CC) $(CFLAGS) $(DEBUG_FLAGS) -I../$(UTILS_DIR) -c $^
+	@$(CC) -o $(STATIC_GRAPH) $(RHAL_OBJS) \
 		$(wildcard $(ROOT_DIR)/$(UTILS_DIR)/*.o)
 	@echo Generating static graph...
 	./$(STATIC_GRAPH)
