@@ -229,7 +229,7 @@ MAIN: {
 
         # Set the right 'make' version according to the OS
         if (/^(\s*MAKE\s*\=).*/) {
-            if ($os eq "Solaris" || $os eq "CYGWIN" || $os eq "LINUX") {
+            if ($os eq "Solaris" || $os eq "CYGWIN" || $os eq "Linux") {
                 s/^(\s*MAKE).*/$1 \= make\n/;
             }
             else {
